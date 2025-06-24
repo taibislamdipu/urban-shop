@@ -6,14 +6,23 @@ import Newsletter from "./components/Newsletter";
 import ProductList from "./components/product/ProductList";
 import TopPromoBanner from "./components/TopPromoBanner";
 import { ProductContext } from "./context";
+import { getAllProducts } from "./data/products";
 
 function App() {
   const [cartData, setCartData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [products, setProducts] = useState(getAllProducts());
 
   return (
     <ProductContext.Provider
-      value={{ cartData, setCartData, searchTerm, setSearchTerm }}
+      value={{
+        cartData,
+        setCartData,
+        searchTerm,
+        setSearchTerm,
+        products,
+        setProducts,
+      }}
     >
       <TopPromoBanner />
       <Header />

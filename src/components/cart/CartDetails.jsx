@@ -5,25 +5,47 @@ import { ProductContext } from "../../context";
 import PromoIcon from "../../icons/PromoIcon";
 
 export default function CartDetails() {
-  const { cartData, setCartData } = useContext(ProductContext);
+  const { cartData, setCartData, products, setProducts } =
+    useContext(ProductContext);
 
   const handleIncrement = (productId) => {
+    const product = products.find((p) => p.id === productId);
+    if (product.stock <= 0) return; // no stock left
+
     setCartData(
       cartData.map((item) =>
         item.id === productId ? { ...item, quantity: item.quantity + 1 } : item
       )
     );
+
+    setProducts(
+      products.map((p) =>
+        p.id === productId ? { ...p, stock: p.stock - 1 } : p
+      )
+    );
   };
 
   const handleDecrement = (productId) => {
-    setCartData(
-      cartData
-        .map((item) =>
+    const cartItem = cartData.find((item) => item.id === productId);
+    if (!cartItem) return;
+
+    if (cartItem.quantity === 1) {
+      // Remove item completely from cart
+      setCartData(cartData.filter((item) => item.id !== productId));
+    } else {
+      setCartData(
+        cartData.map((item) =>
           item.id === productId
             ? { ...item, quantity: item.quantity - 1 }
             : item
         )
-        .filter((item) => item.quantity > 0)
+      );
+    }
+
+    setProducts(
+      products.map((p) =>
+        p.id === productId ? { ...p, stock: p.stock + 1 } : p
+      )
     );
   };
 

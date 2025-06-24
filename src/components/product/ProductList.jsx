@@ -1,11 +1,11 @@
 // components/product/ProductList.jsx
 import { useContext, useMemo, useState } from "react";
 import { ProductContext } from "../../context";
-import { getAllProducts } from "../../data/products";
 
 export default function ProductList() {
-  const products = getAllProducts();
-  const { cartData, setCartData, searchTerm } = useContext(ProductContext);
+  const { cartData, setCartData, products, setProducts, searchTerm } =
+    useContext(ProductContext);
+
   const [sortBy, setSortBy] = useState("Most Popular");
 
   const isInCart = (productId) => {
@@ -16,9 +16,21 @@ export default function ProductList() {
     const exists = isInCart(product.id);
 
     if (exists) {
+      // Remove from cart and increment stock
       setCartData(cartData.filter((item) => item.id !== product.id));
-    } else {
+      setProducts(
+        products.map((p) =>
+          p.id === product.id ? { ...p, stock: p.stock + 1 } : p
+        )
+      );
+    } else if (product.stock > 0) {
+      // Add to cart and decrement stock
       setCartData([...cartData, { ...product, quantity: 1 }]);
+      setProducts(
+        products.map((p) =>
+          p.id === product.id ? { ...p, stock: p.stock - 1 } : p
+        )
+      );
     }
   };
 
