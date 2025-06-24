@@ -1,10 +1,12 @@
-import { useContext } from "react";
+import { useContext, useMemo, useState } from "react";
 import { ProductContext } from "../../context";
 import { getAllProducts } from "../../data/products";
 
 export default function ProductList() {
   const products = getAllProducts();
   const { cartData, setCartData } = useContext(ProductContext);
+
+  const [sortBy, setSortBy] = useState("Most Popular");
 
   const isInCart = (productId) => {
     return cartData.some((item) => item.id === productId);
@@ -14,13 +16,26 @@ export default function ProductList() {
     const exists = isInCart(product.id);
 
     if (exists) {
-      // Remove from cart
       setCartData(cartData.filter((item) => item.id !== product.id));
     } else {
-      // Add to cart with quantity 1
       setCartData([...cartData, { ...product, quantity: 1 }]);
     }
   };
+
+  const sortedProducts = useMemo(() => {
+    const sorted = [...products];
+    switch (sortBy) {
+      case "Newest":
+        return sorted.reverse(); // Assuming original order = newest last
+      case "Price: Low to High":
+        return sorted.sort((a, b) => a.price - b.price);
+      case "Price: High to Low":
+        return sorted.sort((a, b) => b.price - a.price);
+      case "Most Popular":
+      default:
+        return sorted.sort((a, b) => b.rating - a.rating); // Highest rating first
+    }
+  }, [sortBy, products]);
 
   return (
     <div className="lg:col-span-2">
@@ -28,7 +43,11 @@ export default function ProductList() {
         <h2 className="text-2xl font-bold">Your Products</h2>
         <div className="flex items-center space-x-2">
           <span className="text-sm">Sort by:</span>
-          <select className="border rounded-md px-2 py-1 text-sm">
+          <select
+            className="border rounded-md px-2 py-1 text-sm"
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+          >
             <option>Most Popular</option>
             <option>Newest</option>
             <option>Price: Low to High</option>
@@ -38,7 +57,7 @@ export default function ProductList() {
       </div>
 
       <div className="product-grid">
-        {products.map((product) => {
+        {sortedProducts.map((product) => {
           const added = isInCart(product.id);
 
           return (
