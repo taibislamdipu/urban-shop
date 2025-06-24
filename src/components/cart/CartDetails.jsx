@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { FiMinus, FiPlus } from "react-icons/fi";
 import { IoMdClose } from "react-icons/io";
+import { toast } from "react-toastify";
 import { ProductContext } from "../../context";
 import PromoIcon from "../../icons/PromoIcon";
 
@@ -23,6 +24,8 @@ export default function CartDetails() {
         p.id === productId ? { ...p, stock: p.stock - 1 } : p
       )
     );
+
+    toast.success(`${product.title} added to cart`);
   };
 
   const handleDecrement = (productId) => {
@@ -47,10 +50,15 @@ export default function CartDetails() {
         p.id === productId ? { ...p, stock: p.stock + 1 } : p
       )
     );
+
+    toast.success(`${cartItem.title} removed from cart`);
   };
 
   const handleRemove = (productId) => {
     setCartData(cartData.filter((item) => item.id !== productId));
+
+    const productName = products.find((p) => p.id === productId).title;
+    toast.success(`${productName} removed from cart`);
   };
 
   const subtotal = cartData.reduce(
@@ -85,7 +93,7 @@ export default function CartDetails() {
                   <h3 className="font-medium">{product.title}</h3>
                   <button
                     onClick={() => handleRemove(product.id)}
-                    className="text-red-500 text-sm"
+                    className="text-red-500 text-sm cursor-pointer"
                   >
                     <IoMdClose />
                   </button>
@@ -97,14 +105,14 @@ export default function CartDetails() {
                   <div className="flex items-center space-x-2">
                     <button
                       onClick={() => handleDecrement(product.id)}
-                      className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center"
+                      className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center cursor-pointer"
                     >
                       <FiMinus />
                     </button>
                     <span className="text-sm">{product.quantity}</span>
                     <button
                       onClick={() => handleIncrement(product.id)}
-                      className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center"
+                      className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center cursor-pointer"
                     >
                       <FiPlus />
                     </button>

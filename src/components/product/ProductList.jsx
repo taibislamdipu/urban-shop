@@ -1,6 +1,7 @@
 // components/product/ProductList.jsx
 import { useContext, useMemo, useState } from "react";
 import { FaRegStar, FaStar } from "react-icons/fa";
+import { toast } from "react-toastify";
 import { ProductContext } from "../../context";
 
 export default function ProductList() {
@@ -24,6 +25,7 @@ export default function ProductList() {
           p.id === product.id ? { ...p, stock: p.stock + 1 } : p
         )
       );
+      toast.success(`${product.title} removed from cart`);
     } else if (product.stock > 0) {
       // Add to cart and decrement stock
       setCartData([...cartData, { ...product, quantity: 1 }]);
@@ -32,6 +34,7 @@ export default function ProductList() {
           p.id === product.id ? { ...p, stock: p.stock - 1 } : p
         )
       );
+      toast.success(`${product.title} added to cart`);
     }
   };
 
@@ -116,7 +119,7 @@ export default function ProductList() {
                   <p className="font-bold">${product.price}</p>
                   <button
                     onClick={() => handleToggleCart(product)}
-                    className={`w-full mt-2 py-1 text-gray-100 rounded flex items-center justify-center ${
+                    className={`w-full mt-2 py-1 text-gray-100 rounded flex items-center justify-center cursor-pointer ${
                       added
                         ? "bg-red-600 hover:bg-red-700"
                         : "bg-gray-800 hover:bg-gray-900"
