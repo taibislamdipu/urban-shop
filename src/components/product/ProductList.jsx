@@ -4,14 +4,19 @@ import { getAllProducts } from "../../data/products";
 
 export default function ProductList() {
   const products = getAllProducts();
-
   const { cartData, setCartData } = useContext(ProductContext);
 
-  function handleAddToCart(product) {
-    setCartData([...cartData, product]);
+  function isInCart(product) {
+    return cartData.some((item) => item.id === product.id);
   }
 
-  console.log("cartData", cartData);
+  function handleToggleCart(product) {
+    if (isInCart(product)) {
+      setCartData(cartData.filter((item) => item.id !== product.id));
+    } else {
+      setCartData([...cartData, product]);
+    }
+  }
 
   return (
     <div className="lg:col-span-2">
@@ -28,50 +33,53 @@ export default function ProductList() {
         </div>
       </div>
 
-      {/* <!-- Products Grid --> */}
       <div className="product-grid">
-        {/* <!-- Product 1 --> */}
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="bg-gray-100 rounded-lg overflow-hidden transition-transform hover:scale-[1.02] duration-300"
-          >
-            <div className="h-48 bg-gray-200 flex items-center justify-center">
-              <img
-                src={product.image}
-                alt="Gradient Graphic T-shirt"
-                className="h-full w-auto object-cover"
-              />
-            </div>
-            <div className="p-4">
-              <h3 className="font-medium">{product.title}</h3>
-              <div className="flex items-center justify-between">
-                <div className="flex items-center my-1">
-                  <div className="flex text-yellow-400">
-                    <span>★</span>
-                    <span>★</span>
-                    <span>★</span>
-                    <span>★</span>
-                    <span className="text-gray-300">★</span>
+        {products.map((product) => {
+          const inCart = isInCart(product);
+          return (
+            <div
+              key={product.id}
+              className="bg-gray-100 rounded-lg overflow-hidden transition-transform hover:scale-[1.02] duration-300"
+            >
+              <div className="h-48 bg-gray-200 flex items-center justify-center">
+                <img
+                  src={product.image}
+                  alt={product.title}
+                  className="h-full w-auto object-cover"
+                />
+              </div>
+              <div className="p-4">
+                <h3 className="font-medium">{product.title}</h3>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center my-1">
+                    <div className="flex text-yellow-400">
+                      <span>★</span>
+                      <span>★</span>
+                      <span>★</span>
+                      <span>★</span>
+                      <span className="text-gray-300">★</span>
+                    </div>
+                    <span className="text-xs text-gray-500 ml-1">
+                      {product.rating}/5
+                    </span>
                   </div>
-                  <span className="text-xs text-gray-500 ml-1">
-                    {product.rating}/5
+                  <span className="text-xs text-gray-700">
+                    ({product.stock} pcs left)
                   </span>
                 </div>
-                <span className="text-xs text-gray-700">
-                  ({product.stock} pcs left)
-                </span>
+                <p className="font-bold">${product.price}</p>
+                <button
+                  onClick={() => handleToggleCart(product)}
+                  className={`w-full mt-2 py-1 text-gray-100 rounded flex items-center justify-center transition-all ${
+                    inCart ? "bg-red-600" : "bg-gray-800"
+                  }`}
+                >
+                  {inCart ? "Remove From Cart" : "Add To Cart"}
+                </button>
               </div>
-              <p className="font-bold">${product.price}</p>
-              <button
-                onClick={() => handleAddToCart(product)}
-                className="w-full mt-2 bg-gray-800 py-1 text-gray-100 rounded flex items-center justify-center"
-              >
-                Add to Cart
-              </button>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -4,8 +4,6 @@ import { ProductContext } from "../../context";
 export default function CartDetails() {
   const { cartData } = useContext(ProductContext);
 
-  console.log("cartData--->", cartData.length);
-
   const subtotal = cartData.reduce(
     (total, product) => total + product.price,
     0
@@ -22,7 +20,10 @@ export default function CartDetails() {
 
         {cartData.length > 0 ? (
           cartData.map((product) => (
-            <div className="flex items-start space-x-4 pb-4 border-b border-gray-200 mb-4">
+            <div
+              key={product.id}
+              className="flex items-start space-x-4 pb-4 border-b border-gray-200 mb-4"
+            >
               <div className="w-16 h-16 bg-gray-100 rounded flex-shrink-0 flex items-center justify-center">
                 <img
                   src={product.image}
