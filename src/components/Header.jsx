@@ -1,7 +1,11 @@
+import { useContext } from "react";
 import { FaRegUser } from "react-icons/fa6";
 import { IoCartOutline, IoSearchOutline } from "react-icons/io5";
+import { ProductContext } from "../context";
 
 export default function Header() {
+  const { searchTerm, setSearchTerm } = useContext(ProductContext);
+
   return (
     <header className="border-b border-gray-200 py-4 px-4 md:px-8">
       <div className="container mx-auto flex items-center justify-between">
@@ -28,6 +32,8 @@ export default function Header() {
           <div className="relative hidden md:block w-64 border rounded-full border-gray-300">
             <input
               type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               placeholder="Search for products..."
               className="w-full bg-gray-100 rounded-full py-2 px-4 text-sm"
             />
