@@ -1,101 +1,60 @@
+import { useContext } from "react";
+import { ProductContext } from "../../context";
+
 export default function CartDetails() {
+  const { cartData } = useContext(ProductContext);
+
+  console.log("cartData--->", cartData.length);
+
+  const subtotal = cartData.reduce(
+    (total, product) => total + product.price,
+    0
+  );
+
+  const discount = subtotal * 0.2; // 20% discount
+
+  const total = subtotal - discount;
+
   return (
     <div className="lg:col-span-1">
       <div className="bg-white rounded-lg p-6 border border-gray-200">
         <h2 className="text-2xl font-bold mb-6">YOUR CART</h2>
 
-        {/* <!-- Cart Item 1 --> */}
-        <div className="flex items-start space-x-4 pb-4 border-b border-gray-200 mb-4">
-          <div className="w-16 h-16 bg-gray-100 rounded flex-shrink-0 flex items-center justify-center">
-            <img
-              src="./assets/img/image 9-2.png"
-              alt="Gradient Graphic T-shirt"
-              className="h-full w-auto object-cover"
-            />
-          </div>
-          <div className="flex-grow">
-            <div className="flex justify-between">
-              <h3 className="font-medium">Gradient Graphic T-shirt</h3>
-              <span className="text-red-500 text-sm">×</span>
-            </div>
-            <p className="text-sm text-gray-500">Size: Large</p>
-            <p className="text-sm text-gray-500">Color: White</p>
-            <div className="flex justify-between items-center mt-2">
-              <p className="font-bold">$145</p>
-              <div className="flex items-center space-x-2">
-                <button className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
-                  −
-                </button>
-                <span className="text-sm">1</span>
-                <button className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
-                  +
-                </button>
+        {cartData.length > 0 ? (
+          cartData.map((product) => (
+            <div className="flex items-start space-x-4 pb-4 border-b border-gray-200 mb-4">
+              <div className="w-16 h-16 bg-gray-100 rounded flex-shrink-0 flex items-center justify-center">
+                <img
+                  src={product.image}
+                  alt="Gradient Graphic T-shirt"
+                  className="h-full w-auto object-cover"
+                />
+              </div>
+              <div className="flex-grow">
+                <div className="flex justify-between">
+                  <h3 className="font-medium">{product.title}</h3>
+                  <span className="text-red-500 text-sm">×</span>
+                </div>
+                <p className="text-sm text-gray-500">Size: Large</p>
+                <p className="text-sm text-gray-500">Color: White</p>
+                <div className="flex justify-between items-center mt-2">
+                  <p className="font-bold">${product.price}</p>
+                  <div className="flex items-center space-x-2">
+                    <button className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
+                      −
+                    </button>
+                    <span className="text-sm">1</span>
+                    <button className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
+                      +
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* <!-- Cart Item 2 --> */}
-        <div className="flex items-start space-x-4 pb-4 border-b border-gray-200 mb-4">
-          <div className="w-16 h-16 bg-gray-100 rounded flex-shrink-0 flex items-center justify-center">
-            <img
-              src="./assets/img/image 9-2.png"
-              alt="Checkered Shirt"
-              className="h-full w-auto object-cover"
-            />
-          </div>
-          <div className="flex-grow">
-            <div className="flex justify-between">
-              <h3 className="font-medium">Checkered Shirt</h3>
-              <span className="text-red-500 text-sm">×</span>
-            </div>
-            <p className="text-sm text-gray-500">Size: Medium</p>
-            <p className="text-sm text-gray-500">Color: Red</p>
-            <div className="flex justify-between items-center mt-2">
-              <p className="font-bold">$180</p>
-              <div className="flex items-center space-x-2">
-                <button className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
-                  −
-                </button>
-                <span className="text-sm">1</span>
-                <button className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
-                  +
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* <!-- Cart Item 3 --> */}
-        <div className="flex items-start space-x-4 pb-4 border-b border-gray-200 mb-4">
-          <div className="w-16 h-16 bg-gray-100 rounded flex-shrink-0 flex items-center justify-center">
-            <img
-              src="./assets/img/image 9-2.png"
-              alt="Skinny Fit Jeans"
-              className="h-full w-auto object-cover"
-            />
-          </div>
-          <div className="flex-grow">
-            <div className="flex justify-between">
-              <h3 className="font-medium">Skinny Fit Jeans</h3>
-              <span className="text-red-500 text-sm">×</span>
-            </div>
-            <p className="text-sm text-gray-500">Size: Large</p>
-            <p className="text-sm text-gray-500">Color: Blue</p>
-            <div className="flex justify-between items-center mt-2">
-              <p className="font-bold">$240</p>
-              <div className="flex items-center space-x-2">
-                <button className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
-                  −
-                </button>
-                <span className="text-sm">1</span>
-                <button className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
-                  +
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+          ))
+        ) : (
+          <p className="text-gray-600">Your cart is empty.</p>
+        )}
 
         {/* <!-- Order Summary --> */}
         <div className="mt-6">
@@ -104,11 +63,11 @@ export default function CartDetails() {
           <div className="space-y-2 mb-4">
             <div className="flex justify-between">
               <span className="text-gray-600">Subtotal</span>
-              <span className="font-medium">$565</span>
+              <span className="font-medium">${subtotal}</span>
             </div>
             <div className="flex justify-between text-red-500">
               <span>Discount (-20%)</span>
-              <span>-$113</span>
+              <span>-${discount.toFixed(2)}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-gray-600">Delivery Fee</span>
@@ -116,7 +75,7 @@ export default function CartDetails() {
             </div>
             <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-200">
               <span>Total</span>
-              <span>$467</span>
+              <span>${total}</span>
             </div>
           </div>
 
@@ -126,7 +85,7 @@ export default function CartDetails() {
               <input
                 type="text"
                 placeholder="Add promo code"
-                className="w-full border border-gray-300 rounded-md py-2 px-3 text-sm"
+                className="w-full border border-gray-300 rounded-md py-2 pl-8 px-3 text-sm"
               />
               <span className="absolute left-3 top-2.5">
                 <svg
