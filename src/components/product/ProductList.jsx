@@ -6,17 +6,21 @@ export default function ProductList() {
   const products = getAllProducts();
   const { cartData, setCartData } = useContext(ProductContext);
 
-  function isInCart(product) {
-    return cartData.some((item) => item.id === product.id);
-  }
+  const isInCart = (productId) => {
+    return cartData.some((item) => item.id === productId);
+  };
 
-  function handleToggleCart(product) {
-    if (isInCart(product)) {
+  const handleToggleCart = (product) => {
+    const exists = isInCart(product.id);
+
+    if (exists) {
+      // Remove from cart
       setCartData(cartData.filter((item) => item.id !== product.id));
     } else {
-      setCartData([...cartData, product]);
+      // Add to cart with quantity 1
+      setCartData([...cartData, { ...product, quantity: 1 }]);
     }
-  }
+  };
 
   return (
     <div className="lg:col-span-2">
@@ -35,7 +39,8 @@ export default function ProductList() {
 
       <div className="product-grid">
         {products.map((product) => {
-          const inCart = isInCart(product);
+          const added = isInCart(product.id);
+
           return (
             <div
               key={product.id}
@@ -70,11 +75,13 @@ export default function ProductList() {
                 <p className="font-bold">${product.price}</p>
                 <button
                   onClick={() => handleToggleCart(product)}
-                  className={`w-full mt-2 py-1 text-gray-100 rounded flex items-center justify-center transition-all ${
-                    inCart ? "bg-red-600" : "bg-gray-800"
+                  className={`w-full mt-2 py-1 text-gray-100 rounded flex items-center justify-center ${
+                    added
+                      ? "bg-red-600 hover:bg-red-700"
+                      : "bg-gray-800 hover:bg-gray-900"
                   }`}
                 >
-                  {inCart ? "Remove From Cart" : "Add To Cart"}
+                  {added ? "Remove From Cart" : "Add to Cart"}
                 </button>
               </div>
             </div>
