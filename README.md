@@ -15,9 +15,13 @@ A dynamic e-commerce cart assignment built using **React**, **Context API**, and
 
 ![Project Screenshot](screenshot.png)
 
+## Component Structure
+
+![Component Structure](component-structure.png)
+
 ---
 
-## 📋 Assignment Requirements
+## 📋 Requirements
 
 - ✅ Initialize the project using **Vite** with **React JavaScript** (no TypeScript)
 - ✅ Use the given `dist` HTML Template as the base
