@@ -1,5 +1,6 @@
 // components/product/ProductList.jsx
 import { useContext, useMemo, useState } from "react";
+import { FaRegStar, FaStar } from "react-icons/fa";
 import { ProductContext } from "../../context";
 
 export default function ProductList() {
@@ -96,11 +97,13 @@ export default function ProductList() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center my-1">
                       <div className="flex text-yellow-400">
-                        <span>★</span>
-                        <span>★</span>
-                        <span>★</span>
-                        <span>★</span>
-                        <span className="text-gray-300">★</span>
+                        {[...Array(5)].map((_, i) =>
+                          i < product.rating ? (
+                            <FaStar key={i} className="fill-yellow-400" />
+                          ) : (
+                            <FaRegStar key={i} className="text-gray-300" />
+                          )
+                        )}
                       </div>
                       <span className="text-xs text-gray-500 ml-1">
                         {product.rating}/5
